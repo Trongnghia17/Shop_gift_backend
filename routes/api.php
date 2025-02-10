@@ -4,7 +4,13 @@ use App\Http\Controllers\API\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
-
+use App\Http\Controllers\API\PasswordResetController;
+//quên mặt khau
+Route::post('forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::post('reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
+Route::get('reset-password/{token}', function ($token) {
+    return view('auth.passwords.reset', ['token' => $token]);
+})->name('password.reset');
 //dang ky
 Route::post('register', [AuthController::class, 'register']);
 // dang nhap

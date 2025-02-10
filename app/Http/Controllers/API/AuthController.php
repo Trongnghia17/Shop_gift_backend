@@ -25,29 +25,29 @@ class AuthController extends Controller
                     'min:6',
                     'regex:/^(?=.*[A-Z])(?=.*\W).+$/',
                 ],
-                'google2fa_code' => 'required|digits:6',
+//                'google2fa_code' => 'required|digits:6',
             ]
         );
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->messages()], Response::HTTP_BAD_REQUEST);
-        }
-
-        $google2fa = new Google2FA();
-        $secret = $request->input('google2fa_secret');
-
-        // Verify the 2FA code
-        $valid = $google2fa->verifyKey($secret, $request->google2fa_code);
-
-        if (!$valid) {
-            return response()->json(['message' => 'Mã Google Authenticator không chính xác!'], Response::HTTP_UNAUTHORIZED);
-        }
+//        if ($validator->fails()) {
+//            return response()->json(['errors' => $validator->messages()], Response::HTTP_BAD_REQUEST);
+//        }
+//
+//        $google2fa = new Google2FA();
+//        $secret = $request->input('google2fa_secret');
+//
+//        // Verify the 2FA code
+//        $valid = $google2fa->verifyKey($secret, $request->google2fa_code);
+//
+//        if (!$valid) {
+//            return response()->json(['message' => 'Mã Google Authenticator không chính xác!'], Response::HTTP_UNAUTHORIZED);
+//        }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'google2fa_secret' => $secret,
+//            'google2fa_secret' => $secret,
         ]);
 
         return response()->json([
@@ -84,7 +84,7 @@ class AuthController extends Controller
                     'message' => 'Thông tin không hợp lệ!',
                 ]);
             } else {
-                if ($user->role_as == 1) { // admin
+                if ($user->role == 1) { // admin
                     $role = 'admin';
                     $token = $user->createToken($user->email . '_AdminToken', ['server:admin'])->plainTextToken;
                 } else {
