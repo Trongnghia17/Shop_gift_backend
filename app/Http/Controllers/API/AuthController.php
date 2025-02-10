@@ -84,7 +84,7 @@ class AuthController extends Controller
                     'message' => 'Thông tin không hợp lệ!',
                 ]);
             } else {
-                if ($user->role_as == 1) { // admin
+                if ($user->role == 1) { // admin
                     $role = 'admin';
                     $token = $user->createToken($user->email . '_AdminToken', ['server:admin'])->plainTextToken;
                 } else {
